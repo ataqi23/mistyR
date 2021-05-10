@@ -24,7 +24,7 @@ We'll be looking at the midi data for a Calvin Harris song named $``\text{blame}
 
 ```{r}
 # Read midi binary data
-blame_midi <- readMidi("data-midi/blame.mid")
+blame_midi <- readMidi("../data-midi/blame.mid")
 # Get midi dataframe
 blame <- getMidiNotes(blame_midi)
 # Get a glimpse

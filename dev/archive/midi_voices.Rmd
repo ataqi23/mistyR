@@ -1,20 +1,20 @@
 ---
-title: "Dev Template"
+title: "midi"
 author: "Taqi"
-#date: "5/8/2021"
+date: "5/8/2021"
 output: pdf_document
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 # Source files
-source("../R/header.R")
-.src(d = 1)
+source("../../R/header.R")
+.src(d = 2)
 ```
 
 ```{r}
 # Read midi binary data
-blame_midi <- readMidi("../data-midi/blame.mid")
+blame_midi <- readMidi("../../data-midi/blame.mid")
 # Get midi dataframe
 blame <- getMidiNotes(blame_midi)
 # Remove velocity
@@ -22,6 +22,11 @@ blame <- blame %>% select(!contains("velocity"))
 # Set global parameters
 beat_ticks <- 24
 bar_beats <- 4
+```
+
+```{r}
+# Inspect the track names
+if(F){ track_names <- blame_midi %>% .getTrackNames() }
 ```
 
 ```{r}
