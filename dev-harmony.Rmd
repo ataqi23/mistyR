@@ -1,0 +1,101 @@
+---
+title: "Harmony Module"
+author: "Taqi"
+#date: "5/3/2021"
+output: pdf_document
+---
+
+```{r, include=FALSE}
+# Load dependencies
+library(tuneR)
+library(tidyverse)
+library(wesanderson)
+# Source files
+# source("wrangle.R")
+```
+
+```{r}
+ALPHABET <- c("A","B","C","D","E","F","G")
+```
+
+```{r}
+.MUSICAL_ALPHABET <- function(){
+  ALPHABET <- c("A","B","C","D","E","F","G")
+  HAS_BLK_FLAT <- c(1,1,0,1,1,0,1)
+  HAS_BLK_SHRP <- c(1,0,1,1,0,1,1)
+  data.frame(LETTER = ALPHABET, HAS_BLK_FLAT, HAS_BLK_SHRP)
+}
+
+MUSICAL_ALPHABET <- .MUSICAL_ALPHABET()
+```
+
+```{r}
+
+```
+
+
+```{r}
+build_chromatic_scale <- function(root, incrementor){
+  # Get the start note
+  start <- which(MUSICAL_ALPHABET$LETTER == root)
+  # Initialize the chromatic scale
+  CHROMATIC <- .parseLetterNotes(start, incrementor)
+  # Iterate through the alphabet and generate the scale
+  for(i in 2:7){
+    curr_letter <- (start + i) %% 7
+    curr_note <- .parseLetterNotes(curr_letter, incrementor)
+    CHROMATIC <- c(CHROMATIC, curr_note)
+    print(CHROMATIC)
+  }
+  CHROMATIC
+}
+```
+
+```{r}
+# Letter is a numerical between 1:7 denoting which letter; incrementor is a logical column of length 7 
+.parseLetterNotes <- function(letter, incrementor){
+  # Parse the incrementor
+  incr_ref <- .parseIncrementor(incrementor)[[1]]
+  incr_str <- .parseIncrementor(incrementor)[[2]]
+  # Rename index
+  j <- letter
+  # Get letter and incremented letter (if applicable)
+  letter_name <- MUSICAL_ALPHABET$LETTER[j]
+  if(incr_ref[j]){
+    incr_letter <- paste(letter_name, incr_str, sep = "")
+    letter_name <- c(letter_name, incr_letter)
+  }
+  # Return letter or letters
+  letter_name
+}
+```
+
+```{r}
+.parseLetterNotes(6,"sharp")
+```
+
+
+```{r}
+.parseIncrementor <- function(incrementor){
+  if(incrementor == "sharp"){
+    list(MUSICAL_ALPHABET$HAS_BLK_SHRP, "#")
+  } 
+  else if(incrementor == "flat"){
+    list(MUSICAL_ALPHABET$HAS_BLK_FLAT, "-")
+  }
+}
+```
+
+```{r}
+http://www.music.mcgill.ca/~ich/classes/mumt306/StandardMIDIfileformat.html
+```
+
+
+```{r}
+build_chromatic_scale(root = "A", incrementor = "sharp")
+```
+
+```{r}
+CHROMATIC <- c("C","C#",)
+```
+

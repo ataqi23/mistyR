@@ -16,10 +16,6 @@ source("../R/header.R")
 
 ```{r}
 MUS_ALPH <- LETTERS[1:7]
-```
-
-```{r}
-MUS_ALPH
 tonic <- "C"
 which(MUS_ALPH == tonic)
 ```
@@ -34,16 +30,11 @@ phiLetterSeq <- function(tonic, phi){
     print(note)
   }
 }
+```
+
+```{r}
 #phiLetterSeq("C", 7)
-```
-
-```{r}
-
 #.IDX(2,8)
-```
-
-```{r}
-
 ```
 
 ```{r}
@@ -70,31 +61,8 @@ for(i in 1:7){ print(SHARPS_FIFTH(i)) }
 ```
 
 ```{r}
-
-```
-
-```{r}
 "G#" %INC% "#"
 ```
 
-```{r}
-A_octaves <- c(4,4,5,5,5,5,5,5)
-```
 
-```{r}
-A_major <- c("A","B","C#","D","E","F#","G#","A")
-A_major0 <- paste(A_major, A_octaves, sep = "")
-Ab_major <- c()
-for(i in seq_along(A_major)){
-  Ab_major[i] <- (A_major[i] %INC% "b")
-}
-Ab_major <- paste(Ab_major, c(4,4,5,5,5,5,5,5), sep = "")
-```
-
-```{r}
-for(i in seq_along(Ab_major)){
-  playNote(A_major[i])
-  Sys.sleep(0.5)
-}
-```
 

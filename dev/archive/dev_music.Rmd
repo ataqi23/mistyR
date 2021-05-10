@@ -21,6 +21,11 @@ buildScale("Db", "major", descending = T, play = TRUE, plot = TRUE)
 ```
 
 ```{r}
+#buildScale("Db", "lydian", descending = F, play = T, plot = F, formatNotation = T)
+#buildScale("Db", "major", descending = F, play = T, plot = F, formatNotation = T)
+```
+
+```{r}
 minorChord <- function(tonic){
   buildChord(tonic, chord = "minor", play = TRUE, plot = T, formatNotation = TRUE)
 }
@@ -42,3 +47,23 @@ while(TRUE){
 chord <- noteDistance(strings("C4 Eb4 Gb4 Bb4"))
 ```
 
+```{r}
+A_octaves <- c(4,4,5,5,5,5,5,5)
+```
+
+```{r}
+A_major <- c("A","B","C#","D","E","F#","G#","A")
+A_major0 <- paste(A_major, A_octaves, sep = "")
+Ab_major <- c()
+for(i in seq_along(A_major)){
+  Ab_major[i] <- (A_major[i] %INC% "b")
+}
+Ab_major <- paste(Ab_major, c(4,4,5,5,5,5,5,5), sep = "")
+```
+
+```{r}
+for(i in seq_along(Ab_major)){
+  playNote(A_major[i])
+  Sys.sleep(0.5)
+}
+```

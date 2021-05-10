@@ -1,0 +1,48 @@
+---
+title: "Dev Template"
+author: "Taqi"
+#date: "5/8/2021"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+# Source files
+source("../R/header.R")
+.src(d = 1)
+```
+
+```{r}
+#===========================#
+#     STEP UP AND DOWN
+#===========================#
+for(i in seq_along(MUS_ALPH)){
+  print(MUS_ALPH %STEPDOWN% MUS_ALPH[i])
+}
+for(i in seq_along(MUS_ALPH)){
+  print(MUS_ALPH %STEPUP% MUS_ALPH[i])
+}
+```
+
+```{r}
+#===========================#
+#     NEAREST WHITE KEY
+#===========================#
+for(i in seq_along(CHROMATIC_C_FLTS)){
+  print(.nearestWhite(CHROMATIC_C_SHPS[i]))
+}
+for(i in seq_along(CHROMATIC_C_FLTS)){
+  print(.nearestWhite(CHROMATIC_C_FLTS[i]))
+}
+```
+
+```{r}
+#===========================#
+#        ENHARMONICS
+#===========================#
+enharmonic_examples <- c("Fb","C-","E#","B#")
+for(i in seq_along(enharmonic_examples)){
+  enharmonic <- .findEnharmonic(enharmonic_examples[i])
+  print(enharmonic)
+}
+```

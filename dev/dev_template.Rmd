@@ -7,8 +7,13 @@ output: pdf_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+# Load dependencies
+library(music)
 # Source files
 source("../R/header.R")
+source("harmony.R")
+source("incidentals.R")
+source("global.R")
 .src(d = 1)
 ```
 

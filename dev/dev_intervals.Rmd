@@ -17,39 +17,9 @@ source("incidentals.R")
 ```
 
 ```{r}
-#buildScale("Db", "lydian", descending = F, play = T, plot = F, formatNotation = T)
-#buildScale("Db", "major", descending = F, play = T, plot = F, formatNotation = T)
-```
-
-```{r}
-note <- "F#"
-.nearestWhite <- function(note){
-  # Get notes with corrosponding incidentals
-  withFlats <- ALPHABET[which(ALPHABET$HAS_FL),"LETTER"]
-  withSharps <- ALPHABET[which(ALPHABET$HAS_SH),"LETTER"]
-  # Get note letter
-  letter <- substring(note, first = 1, last = 1)
-  # See if the note already has an incidental
-  isFlat <- str_detect(note, pattern = "-") || str_detect(note, pattern = "b")
-  isSharp <- str_detect(note, pattern = "#")
-  # Get neighbouring notes ready
-  above <- note %INC% "#"
-  below <- note %INC% "b"
-  # Find nearest white key
-  # Do we care to && above %in% withFlats?
-  if(isFlat){ 
-    list(above, -1)
-  } else if(isSharp){
-    list(below, 1)
-  }
-}
-```
-
-```{r}
 note1 <- "D"
 note2 <- "F#"
 ```
-
 
 ```{r}
 # The smallest interval with a nonzero number of semitones in between is M2
@@ -96,10 +66,6 @@ rownames(intervals) <- MUS_ALPH
 ```
 
 ```{r}
-
-```
-
-```{r}
 # Enharmonics
 .nearestWhite("Gx") == "A"
 .nearestWhite("B#") == "C"
@@ -107,11 +73,6 @@ rownames(intervals) <- MUS_ALPH
 
 # Simple incidentals
 .nearestWhite("Ab")
-```
-
-
-```{r}
-
 ```
 
 
