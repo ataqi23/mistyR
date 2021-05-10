@@ -2,6 +2,7 @@
 #============================================#
 #          INCIDENTAL INCRMENTATION
 #============================================#
+# A wrapper infix function that increments a note with an incidental (simple/letter-preserving)
 `%INC%` <- function(tonic, incidental){
   if(incidental == "#"){
     return(.addIncidental(tonic, "sharp"))
@@ -11,31 +12,35 @@
   }
 }
 #============================================#
+# Given a note and an incidental, adds up to a double incidental (simple/letter-preserving; no enharmonics)
 .addIncidental <- function(note, incidental){
   # Get note letter
   note_letter <- .dropIncidental(note)
   # See if the note already has an incidental
-  noteINC <- .detectIncidental(note)
+  note_inc <- .detectIncidental(note)
   # Find appropriate incidental
   if(incidental == "flat"){ 
-    if(noteINC == "flat"){ incidental <- "&" } 
-    else if(noteINC == "sharp"){ incidental <- "" }
-    else{ incidental <- "b" }
+    if(note_inc == "flat"){ incidental <- "&" } 
+    else if(note_inc == "natural"){ incidental <- "b" }
+    else if(note_inc == "sharp"){ incidental <- "" }
   }
   else if(incidental == "sharp"){
-    if(noteINC == "sharp"){ incidental <- "x" } 
-    else if(noteINC == "flat"){ incidental <- "" }
-    else { incidental <- "#" }
+    if(note_inc == "sharp"){ incidental <- "x" } 
+    else if(note_inc == "natural"){ incidental <- "#" }
+    else if(note_inc == "flat"){ incidental <- "" }
+  }
+  # Otherwise, print a warning and return no incidental
+  else{
+    print("Warning: possible misuse; incidental not found.")
+    incidental <- ""
   }
   # Return note with added incidental
   return(paste(note_letter, incidental, sep = ""))
 }
 #============================================#
-# Given a note, drop the incidental and obtain the letter
-.dropIncidental <- function(note){
-  # Get the note letter
-  substring(note, first = 1, last = 1)
-}
+# Given a note, drop the incidental and obtain the note letter
+.dropIncidental <- function(note){ substring(note, first = 1, last = 1) }
+
 #============================================#
 #           INCIDENTAL DETECTION
 #============================================#
@@ -52,7 +57,6 @@
 #============================================#
 #           INCIDENTAL ARITHMETIC
 #============================================#
-
 # Return either the number of semitones of a incidental or incidental from semitones
 .incidentalSemitones <- function(x, inverse = T){
   INCIDENTAL <- c("&", "b", "", "#", "x")

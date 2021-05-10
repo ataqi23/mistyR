@@ -67,5 +67,30 @@ DIATONIC_SCALES$phrygian <- DIATONIC_SCALES$dorian; DIATONIC_SCALES$phrygian[1] 
 
 # Other common scales
 OTHER_SCALES <- list(minor_blues = c("b3","4","#4","5","b7"),
-                     major_blues = c("1","2","b3","3","5","6"))
+                     major_blues = c("2","b3","3","5","6"))
+
+#============================================#
+#            LOW-LEVEL METHODS
+#============================================#
+
+# Arithmetic modulo 7
+mod7 <- function(x) { x %% 7 }
+
+# Convert a note into a note index in the musical alphabet
+note_index <- function(note){ which(MUS_ALPH == note) }
+
+# Generates a wrapped range of indices on the musical alphabet of a given a length
+.ALPH_RANGE <- function(i, length){
+  range <- i:(i + (length - 1))
+  range <- mod7(range - 1)
+  range + 1
+}
+# Rename broken alias for now
+.IDX <- .ALPH_RANGE
+
+# Wraps a static range of integers
+.IDX_STATIC <- function(range){ mod7(range - 1) + 1 }
+# Rename broken alias for now
+.IDXR <- .IDX_STATIC
+
 

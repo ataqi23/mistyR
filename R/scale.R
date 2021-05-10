@@ -2,7 +2,20 @@
 #============================================#
 #               COMMON SCALES
 #============================================#
-
+# Given a tonic, returns the diatonic major scale
+major_scale <- function(tonic){ diatonic_scale(tonic, "major") }
+#============================================#
+# Given a tonic, returns the diatonic minor scale
+minor_scale <- function(tonic){ diatonic_scale(tonic, "minor") }
+#============================================#
+# Given a tonic and a diatonic mode, returns the corresponding diatonic scale
+diatonic_scale <- function(tonic, mode){
+  # Get the scale degrees from the DIATONIC_SCALES list
+  scale_degrees <- DIATONIC_SCALES[[mode]]
+  # Return the diatonic scale
+  scale(tonic, scale_degrees)
+}
+#============================================#
 # Given a tonic, returns the major blues scale
 blues_scale <- function(tonic, quality){ 
   if(quality == "minor"){ 
@@ -13,24 +26,9 @@ blues_scale <- function(tonic, quality){
   }
 }
 
-# Given a tonic, returns the diatonic major scale
-major_scale <- function(tonic){ diatonic_scale(tonic, "major") }
-
-# Given a tonic, returns the diatonic minor scale
-minor_scale <- function(tonic){ diatonic_scale(tonic, "minor") }
-
-# Given a tonic and a diatonic mode, returns the corresponding diatonic scale
-diatonic_scale <- function(tonic, mode){
-  # Get the scale degrees from the DIATONIC_SCALES list
-  scale_degrees <- DIATONIC_SCALES[[mode]]
-  # Return the diatonic scale
-  scale(tonic, scale_degrees)
-}
-
 #============================================#
-#              SCALE SPELLING
+#                   SCALES
 #============================================#
-
 # Given a tonic and a vector of scale degrees, spells the scale and returns it
 scale <- function(tonic, scale_degrees){
   # Get the note letter and incidental
@@ -66,7 +64,7 @@ scale <- function(tonic, scale_degrees){
   }
   
 }
-
+#============================================#
 # Ensure the scale degrees are enharmonically correct by finding the enharmonic of the first repeated letter
 # .scaleEnharmonics <- function(scale){
 #   for(i in 1:num_notes){
@@ -100,27 +98,4 @@ scale <- function(tonic, scale_degrees){
   note
 }
 
-#============================================#
-#            LOW-LEVEL METHODS
-#============================================#
-
-# Arithmetic modulo 7
-mod7 <- function(x) { x %% 7 }
-
-# Convert a note into a note index in the musical alphabet
-note_index <- function(note){ which(MUS_ALPH == note) }
-
-# Generates a wrapped range of indices on the musical alphabet of a given a length
-.ALPH_RANGE <- function(i, length){
-  range <- i:(i + (length - 1))
-  range <- mod7(range - 1)
-  range + 1
-}
-# Rename broken alias for now
-.IDX <- .ALPH_RANGE
-
-# Wraps a static range of integers
-.IDX_STATIC <- function(range){ mod7(range - 1) + 1 }
-# Rename broken alias for now
-.IDXR <- .IDX_STATIC
 

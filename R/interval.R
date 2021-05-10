@@ -21,6 +21,7 @@
 #============================================#
 #            WHITE KEY SEMITONES
 #============================================#
+# Find the white-key range number of semitones between a note and a given scale degree
 .WKsemitones <- function(note, degree){
   # Get the alphabet range for the chosen note and degree
   note_idx <- note_index(note)
@@ -38,7 +39,6 @@
 #============================================#
 #            SEMITONE ARITHMETIC
 #============================================#
-
 `%ST+%` <- function(note, semitones){
   if(semitones == 1){ return(note %INC% "#") }
   else if(semitones == 2){ return((note %INC% "#") %INC% "#")}
@@ -50,29 +50,3 @@
 }
 
 
-#============================================#
-#            NEAREST WHITE KEY
-#============================================#
-# .nearestWhite <- function(note){
-#   # Detect note incidental
-#   incidental <- .detectIncidental(note)
-#   if(incidental == "natural"){
-#     # Return same note if no incidental is found
-#     return(list(note, 0))
-#   } 
-#   else{
-#     # Otherwise, try to find a simpler enharmonic before proceeding
-#     note <- .simpler_enharmonic(note)
-#   }
-#   # Find nearest white key
-#   if(incidental == "flat"){
-#     above <- note %INC% "#"
-#     offset <- -1
-#     list(above, offset)
-#   } 
-#   else if(incidental == "sharp"){
-#     below <- note %INC% "b"
-#     offset <- 1
-#     list(below, offset)
-#   }
-# }

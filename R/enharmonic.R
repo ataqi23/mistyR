@@ -2,7 +2,7 @@
 #============================================#
 #            SIMPLE ENHARMONICS
 #============================================#
-.enharmonic <- function(note, above = TRUE, simplify = FALSE){
+enharmonic <- function(note, above = TRUE, simplify = FALSE){
   # Simplify the enharmonic if prompted
   # if(simplify){ note <- .simpler_enharmonic(note) }
   # Get the current incidental and note letter
@@ -22,7 +22,7 @@
   }
   else{ return(.simpler_enharmonic(note)) }
 }
-
+#============================================#
 # Given a black key, cycle between the two basic enharmonics
 .cycle_enharmonic <- function(black_note){
   # Get the current incidental and note letter
@@ -64,11 +64,11 @@
     # Otherwise, just go to the letter above
     return(MUS_ALPH %STEPUP% note_letter)
   }
-  #.enharmonic(note, simplify = FALSE)
 }
 #============================================#
-#           ENHARMONICS DETECTION
+#             HELPER FUNCTIONS
 #============================================#
+# Given a note, determine whether it is a "black" key (on the piano)
 .isBlackNote <- function(note){
   # Get the note incidental and note letter
   note_inc <- .detectIncidental(note)
@@ -77,4 +77,9 @@
   if(note_inc == "flat"){ return(note_letter %in% HAS_FLATS) }
   else if(note_inc == "sharp"){ return(note_letter %in% HAS_SHARPS) }
   FALSE
+}
+#============================================#
+# Given a note, determine whether it is a "white" key (on the piano)
+.isWhiteNote <- function(note){
+  !.isBlackNote(note)
 }
