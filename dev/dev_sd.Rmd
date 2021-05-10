@@ -22,19 +22,32 @@ note <- "C"; degree <- 3
 # Find the number of semitones between two white keys
 # In other words, the number of semitones between the scale degrees in A minor/C major
 .WKsemitones <- function(note, degree){
-  # Get the note index
+  # Get the alphabet range for the chosen note and degree
   note_idx <- note_index(note)
   range <- .ALPH_RANGE(note_idx, degree)
+  letter_range <- ALPHABET[range,]
   # Get the number of flats in range
-  FLATS <- sum(ALPHABET[range,]$HAS_FL)
-  # Get the number of white keys in the range
-  WHITES <- degree - 2
+  FLATS <- sum(letter_range[2:degree,]$HAS_FL)
+  # Get the number of white keys in the range (exclude tonic)
+  WHITES <- degree - 1
   # Return the number of semitones
   semitones <- FLATS + WHITES
   semitones
 }
 .WKsemitones(note, degree)
 ```
+
+```{r}
+note <- "D"; degree <- 5
+.WKsemitones(note, degree)
+```
+
+```{r}
+for(i in seq_along(MUS_ALPH)){
+  print(.WKsemitones(MUS_ALPH[i], degree))
+}
+```
+
 
 ```{r}
 tonic <- "D"
@@ -58,10 +71,53 @@ degree <- "3"
 ```
 
 ```{r}
-tonic <- "D"
-#.intervalNote(tonic, "3")
-D_major <- c(tonic, map2_chr(rep(tonic,6), DIATONIC_SCALES$major, .intervalNote))
-D_major
+.majorScaleWK <- function(tonic){
+  c(tonic, purrr::map2_chr(rep(tonic,6), DIATONIC_SCALES$major, .intervalNote))
+}
+```
+
+```{r}
+"C" %>% majorScale
+```
+
+```{r}
+majorScale <- function(tonic){
+  # Get the note letter and incidental
+  note_letter <- .dropIncidental(tonic)
+  incidental <- .detectIncidental(tonic)
+  # Get the white key scale (i.e. using just the note letter)
+  base_scale <- .majorScaleWK(note_letter)
+  # If the incidental is a natural (white key), return the white key scale
+  if(incidental == "natural"){ return(.majorScaleWK(tonic)) }
+  # Otherwise, apply the incidental over the base scale to return the correct scale
+  map_chr(base_scale, .addIncidental, incidental)
+}
+```
+
+```{r}
+majorScale("D#")
+```
+
+```{r}
+scale <- function(tonic, scale_degrees){
+  # Get the note letter and incidental
+  note_letter <- .dropIncidental(tonic)
+  incidental <- .detectIncidental(tonic)
+  # Get the white key scale (i.e. using just the note letter)
+  base_scale <- .scaleBase(note_letter, scale_degrees)
+  # If the incidental is a natural (white key), return the white key scale
+  if(incidental == "natural"){ return(base_scale) }
+  # Otherwise, apply the incidental over the base scale to return the correct scale
+  purrr::map_chr(base_scale, .addIncidental, incidental)
+}
+.scaleBase <- function(tonic, scale_degrees){
+  c(tonic, purrr::map2_chr(rep(tonic,length(scale_degrees)), scale_degrees, .intervalNote))
+}
+```
+
+```{r}
+dorian <- DIATONIC_SCALES$dorian
+scale("",)
 ```
 
 

@@ -1,5 +1,55 @@
 
 #============================================#
+#               COMMON SCALES
+#============================================#
+
+# Given a tonic, returns the major blues scale
+blues_scale <- function(tonic, quality){ 
+  if(quality == "minor"){ 
+    scale(tonic, OTHER_SCALES$minor_blues) 
+  }
+  else if(quality == "major"){ 
+    scale(tonic, OTHER_SCALES$major_blues)
+  }
+}
+
+# Given a tonic, returns the diatonic major scale
+major_scale <- function(tonic){ diatonic_scale(tonic, "major") }
+
+# Given a tonic, returns the diatonic minor scale
+minor_scale <- function(tonic){ diatonic_scale(tonic, "minor") }
+
+# Given a tonic and a diatonic mode, returns the corresponding diatonic scale
+diatonic_scale <- function(tonic, mode){
+  # Get the scale degrees from the DIATONIC_SCALES list
+  scale_degrees <- DIATONIC_SCALES[[mode]]
+  # Return the diatonic scale
+  scale(tonic, scale_degrees)
+}
+
+#============================================#
+#              SCALE SPELLING
+#============================================#
+
+# Given a tonic and a vector of scale degrees, spells the scale and returns it
+scale <- function(tonic, scale_degrees){
+  # Get the note letter and incidental
+  note_letter <- .dropIncidental(tonic)
+  incidental <- .detectIncidental(tonic)
+  # Get the white key scale (i.e. using just the note letter)
+  base_scale <- .scaleBase(note_letter, scale_degrees)
+  # If the incidental is a natural (white key), return the white key scale
+  if(incidental == "natural"){ return(base_scale) }
+  # Otherwise, apply the incidental over the base scale to return the correct scale
+  purrr::map_chr(base_scale, .addIncidental, incidental)
+}
+#============================================#
+# Given a white key, return the scale base prior to incidentalization
+.scaleBase <- function(tonic, scale_degrees){
+  c(tonic, purrr::map2_chr(rep(tonic,length(scale_degrees)), scale_degrees, .intervalNote))
+}
+
+#============================================#
 #              SCALE ORDERING
 #============================================#
 

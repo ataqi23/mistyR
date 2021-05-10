@@ -1,17 +1,38 @@
 #============================================#
 #          INTERVAL CONSTRUCTION
 #============================================#
-.buildInterval <- function(tonic, degree){
+.intervalNote <- function(tonic, degree){
+  # Coerce the degree as a numeric 
+  degree_n <- parse_number(degree)
   # Get the number of semitones from the scale degree
-  semitones <- SCALE_DEGREES
-  
+  semitones <- SCALE_DEGREES[[degree]]
+  # Get the target note letter (by stepping up n - 1 times)
+  white <- tonic %STEP+% (degree_n - 1)
+  # Find the semitones spanned
+  semitones_white <- .WKsemitones(tonic, degree_n)
+  # Use incidentals to find the difference
+  incidental <- .incidentalSemitones(semitones - semitones_white)
+  # Paste incidental the correct target note
+  note <- paste(white, incidental, sep = "")
+  # Return the interval
+  note
 }
 
 #============================================#
-#            WHITE KEY INTERVALS
+#            WHITE KEY SEMITONES
 #============================================#
-.simpleInterval <- function(){
-  
+.WKsemitones <- function(note, degree){
+  # Get the alphabet range for the chosen note and degree
+  note_idx <- note_index(note)
+  range <- .ALPH_RANGE(note_idx, degree)
+  letter_range <- ALPHABET[range,]
+  # Get the number of flats in range
+  FLATS <- sum(letter_range[2:degree,]$HAS_FL)
+  # Get the number of white keys in the range (exclude tonic)
+  WHITES <- degree - 1
+  # Return the number of semitones
+  semitones <- FLATS + WHITES
+  semitones
 }
 
 #============================================#

@@ -49,6 +49,7 @@ SCALE_DEGREES <-   list(`1` = 0,
                         b3 = 3,
                         `3` = 4,
                         `4` = 5,
+                        `#4`=6,
                         b5 = 6,
                         `5` = 7,
                         `#5` = 8,
@@ -56,5 +57,15 @@ SCALE_DEGREES <-   list(`1` = 0,
                         b7 = 10,
                         `7` = 11)
 # Diatonic scales by scale degrees
-DIATONIC_SCALES <- list(major = c("2","3","4","5","6","7"))
+DIATONIC_SCALES <- list(major = c("2","3","4","5","6","7"),
+                        minor = c("2","b3","4","5","b6","b7"))
+# Append all the major modes
+DIATONIC_SCALES$lydian <- DIATONIC_SCALES$major; DIATONIC_SCALES$lydian[3] <- "#4"
+# Append all the minor modes
+DIATONIC_SCALES$dorian <- DIATONIC_SCALES$minor; DIATONIC_SCALES$dorian[5] <- "6"
+DIATONIC_SCALES$phrygian <- DIATONIC_SCALES$dorian; DIATONIC_SCALES$phrygian[1] <- "b2"
+
+# Other common scales
+OTHER_SCALES <- list(minor_blues = c("b3","4","#4","5","b7"),
+                     major_blues = c("1","2","b3","3","5","6"))
 
