@@ -11,7 +11,8 @@ knitr::opts_chunk$set(echo = TRUE)
 library(music)
 # Source files
 source("../R/header.R")
-source("harmony.R")
+source("global.R")
+source("scales.R")
 source("incidentals.R")
 .src(d = 1)
 ```
@@ -77,6 +78,6 @@ rownames(intervals) <- MUS_ALPH
 
 
 ```{r}
-stepsByDegree$b7
+SCALE_DEGREES$b7
 ```
 

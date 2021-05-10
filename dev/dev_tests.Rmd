@@ -14,11 +14,39 @@ source("../R/header.R")
 
 ```{r}
 #===========================#
-#     STEP UP AND DOWN
+#        ENHARMONICS
+#===========================#
+# Alias function
+f <- .enharmonic
+# Test cases
+f("Cb") == "B"
+f("E&") == "D"
+f("Gb") == "F#"
+f("E#") == "F"
+f("B&") == "A"
+f("Ax") == "B"
+f("F&") == "Eb"
+f("G", T) == "A&"
+f("G", F) == "Fx"
+```
+
+
+
+
+
+```{r}
+#===========================#
+#         STEP DOWN
 #===========================#
 for(i in seq_along(MUS_ALPH)){
   print(MUS_ALPH %STEPDOWN% MUS_ALPH[i])
 }
+```
+
+```{r}
+#===========================#
+#         STEP UP
+#===========================#
 for(i in seq_along(MUS_ALPH)){
   print(MUS_ALPH %STEPUP% MUS_ALPH[i])
 }
@@ -42,7 +70,18 @@ for(i in seq_along(CHROMATIC_C_FLTS)){
 #===========================#
 enharmonic_examples <- c("Fb","C-","E#","B#")
 for(i in seq_along(enharmonic_examples)){
-  enharmonic <- .findEnharmonic(enharmonic_examples[i])
+  enharmonic <- .simpler_enharmonic(enharmonic_examples[i])
   print(enharmonic)
 }
 ```
+
+```{r}
+.simpler_enharmonic("Fx") == "G"
+.simpler_enharmonic("Ex") == "F#"
+#.simpler_enharmonic("E##") == "F#"
+.simpler_enharmonic("C&") == "Bb"
+#.simpler_enharmonic("Cbb") == "Bb"
+.simpler_enharmonic("Ax") == "B"
+.simpler_enharmonic("B&") == "A"
+```
+

@@ -60,9 +60,6 @@ SHARPS_FIFTH <- function(i){BLK_KEYS_BTWN(MUS_ALPH[i], degree = 5)}
 for(i in 1:7){ print(SHARPS_FIFTH(i)) }
 ```
 
-```{r}
-"G#" %INC% "#"
-```
 
 
 
