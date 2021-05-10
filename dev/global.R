@@ -44,6 +44,7 @@ CHROMATIC_C_SHPS <- c("C","C#","D","D#","E","F","F#","G","G#","A","A#","B")
 CHROMATIC_C_FLTS <- c("C","Db","D","Eb","E","F","Gb","G","Ab","A","Bb","B")
 # Semitones by scale degree
 SCALE_DEGREES <-   list(`1` = 0,
+                        `b2`=1,
                         `2` = 2,
                         b3 = 3,
                         `3` = 4,
@@ -54,6 +55,6 @@ SCALE_DEGREES <-   list(`1` = 0,
                         `6` = 9,
                         b7 = 10,
                         `7` = 11)
-# Scales by scale degrees
-
+# Diatonic scales by scale degrees
+DIATONIC_SCALES <- list(major = c("2","3","4","5","6","7"))
 

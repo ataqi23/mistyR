@@ -18,7 +18,7 @@ source("global.R")
 ```
 
 ```{r}
-note <- "D"; degree <- 5
+note <- "C"; degree <- 3
 # Find the number of semitones between two white keys
 # In other words, the number of semitones between the scale degrees in A minor/C major
 .WKsemitones <- function(note, degree){
@@ -44,7 +44,7 @@ degree <- "3"
   degree_n <- parse_number(degree)
   # Get the number of semitones from the scale degree
   semitones <- SCALE_DEGREES[[degree]]
-  # Get the target note letter
+  # Get the target note letter (by stepping up n - 1 times)
   white <- tonic %STEP+% (degree_n - 1)
   # Find the semitones spanned
   semitones_white <- .WKsemitones(tonic, degree_n)
@@ -58,12 +58,14 @@ degree <- "3"
 ```
 
 ```{r}
-tonic <- "G"
-
+tonic <- "D"
+#.intervalNote(tonic, "3")
+D_major <- c(tonic, map2_chr(rep(tonic,6), DIATONIC_SCALES$major, .intervalNote))
+D_major
 ```
 
 
 ```{r}
-.WKsemitones("D", 3)
+.WKsemitones("D", 2)
 ```
 
