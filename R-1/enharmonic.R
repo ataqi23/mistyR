@@ -11,7 +11,7 @@ enharmonic <- function(note, above = TRUE, simplify = FALSE){
   # If the incidental is a black key, cycle enharmonics
   if(.isBlackNote(note)){ return(.cycle_enharmonic(note)) }
   # If it is natural, return a double enharmonic
-  else if(note_inc == "natural"){
+  else if(note_inc == "natural"){ 
     # If prompted for letter above, return double flat
     if(above){ return(((MUS_ALPH %STEPUP% note) %INC% "b") %INC% "b")}
     # Otherwise, return letter below, double sharp

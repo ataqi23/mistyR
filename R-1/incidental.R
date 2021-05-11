@@ -19,13 +19,13 @@
   # See if the note already has an incidental
   note_inc <- .detectIncidental(note)
   # Find appropriate incidental
-  if(incidental == "flat"){
-    if(note_inc == "flat"){ incidental <- "&" }
+  if(incidental == "flat"){ 
+    if(note_inc == "flat"){ incidental <- "&" } 
     else if(note_inc == "natural"){ incidental <- "b" }
     else if(note_inc == "sharp"){ incidental <- "" }
   }
   else if(incidental == "sharp"){
-    if(note_inc == "sharp"){ incidental <- "x" }
+    if(note_inc == "sharp"){ incidental <- "x" } 
     else if(note_inc == "natural"){ incidental <- "#" }
     else if(note_inc == "flat"){ incidental <- "" }
   }
