@@ -12,6 +12,8 @@ library(tidyverse)
 # Source files
 source("../R-museR/header.R")
 .src(1)
+source("../R/header.R")
+.src(1)
 ```
 
 ```{r}
@@ -20,28 +22,4 @@ bach_spline <- "../data-krn/bach_C_notes.krn"
 bach <- kern2df(bach_spline)
 ```
 
-```{r}
-.getScoreNotes <- function(score){
-  score %>% select(contains(c("key","measure","name")))
-}
-```
-
-```{r}
-bach_notes <- .getScoreNotes(bach)
-```
-
-```{r}
-# Get a bar of the score note dataframe
-.getMeasure <- function(measure, score){
-  score %>% filter(measure_p == measure) %>% select(!contains("measure_p"))
-}
-```
-
-```{r}
-measure1 <- .getMeasure(1, bach_notes)
-```
-
-```{r}
-relative_key(bach_notes)
-```
 

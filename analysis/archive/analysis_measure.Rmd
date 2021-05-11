@@ -1,0 +1,74 @@
+---
+title: "Bach Analysis"
+author: "Taqi"
+# date: "4/6/2021"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+# Load libraries
+library(tidyverse)
+# Source files
+source("../R-museR/header.R")
+.src(1)
+source("../R/header.R")
+.src(1)
+```
+
+```{r}
+# Bach score file path
+bach_spline <- "../data-krn/bach_C_notes.krn"
+bach <- kern2df(bach_spline)
+```
+
+```{r}
+.getScoreNotes <- function(score){
+  score %>% select(contains(c("key","measure","name")))
+}
+```
+
+```{r}
+bach_notes <- .getScoreNotes(bach)
+```
+
+```{r}
+# Get a bar of the score note dataframe
+.getMeasures <- function(measure, score){
+  score %>% filter(measure_p %in% c(measure)) #%>% select(!contains("measure_p"))
+}
+```
+
+```{r}
+measure1 <- .getMeasure(1:5, bach_notes)
+```
+
+```{r}
+score <- bach_notes
+# Given a score (or subscore) dataframe, collapse the score into a vector of the notes in the note columns
+.obtainNotes <- function(score){
+  score_notes <- score %>% select(!contains(c("key","measure_p")))
+  score_notes <- map(score_notes, .cleanNoteColumn) %>% unlist() %>% unname()
+  score_notes[which(!is.na(score_notes))]
+}
+score_notes <- .obtainNotes(bach_notes)
+```
+
+```{r}
+.cleanNoteColumn <- function(notes){
+  notes <- as.vector(notes)
+  rests_idx <- c(which(notes == "."), (which(notes == "rest")))
+  notes[rests_idx] <- NA
+  return(notes)
+}
+```
+
+
+```{r}
+score_notes
+table(map(score_notes, function(x,y){scaleDegree(y,x)}, "C") %>% unlist())
+```
+```{r}
+
+```
+

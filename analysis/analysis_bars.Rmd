@@ -1,0 +1,99 @@
+---
+title: "Bach Analysis"
+author: "Taqi"
+# date: "4/6/2021"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+# Load libraries
+library(tidyverse)
+# Source files
+source("../R-museR/header.R")
+.src(1)
+source("../R/header.R")
+.src(1)
+```
+
+```{r}
+# Bach score file path
+bach_spline <- "../data-krn/bach_C_notes.krn"
+bach <- kern2df(bach_spline)
+```
+
+```{r}
+bach_notes <- getScoreNotes(bach)
+```
+
+
+```{r}
+subscore <- bach_notes
+# Analyze the modal features of a subscore (same key)
+subscoreModality <- function(subscore){
+  # Get the tonic and quality from the key signature
+  key_sig <- relative_key(subscore)
+  tonic <- str_to_upper(key_sig[[1]])
+  quality <- str_to_lower(key_sig[[2]])
+  # Get the number of bars
+  bars <- levels(as.factor(as.numeric(subscore$measure_p)))
+  num_bars <- length(bars)
+  # Create a dataframe with a row for each bar
+  modal <- data.frame(bar = 1:num_bars)
+  modal <- cbind(modal, .modalRow())
+  # Get the modal features of each bar
+  for(i in 1:num_bars){
+    # Get the measure
+    measure <- getMeasures(measure = bars[i], score = subscore)
+    # Obtain the notes and their sd freq
+    measure_notes <- collapseNotes(measure)
+    freqs <- SD_freq(measure_notes, tonic)
+    modal[i,2:4] <- modality(freqs, quality)
+  }
+  return(modal)
+}
+subscoreModality(subscore)
+```
+
+```{r}
+modal <- analyzeModality(bach_notes)
+```
+
+```{r}
+score <- data.frame(key = c(rep("A",5),rep("B",10)))
+subscores <- score %>% split(score$key)
+```
+
+
+```{r}
+analyzeKRN <- function(filename){ analyzeScore(kern2df()) }
+```
+
+
+```{r}
+subscores <- list(bach_notes,bach_notes)
+# After splitting the score into subscores (accounting for key changes)
+analyzeScore <- function(score){
+  # Filter for notes
+  score <- getScoreNotes(score)
+  # Split into subscores (accounting for key changes)
+  subscores <- score %>% split(score$key_p)
+  # Get the modality of each subscore
+  modal <- map_dfr(subscores, subscoreModality) %>% select(!contains("bar"))
+  # Return the summary statistics
+  purrr::map_dbl(modal, mean)
+}
+```
+
+
+```{r}
+analyzeScore(bach)
+```
+
+
+```{r}
+.modalRow <- function(){
+  data.frame(blues = NA, interchange = NA, borrowed_sub = NA)
+}
+```
+
