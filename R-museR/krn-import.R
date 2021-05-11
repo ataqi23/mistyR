@@ -202,13 +202,70 @@ krn_note <- function(note){
 #' @import tidyverse
 #' 
 relative_key <- function(piece){
+  # Get the single letter key name
+  krn_key <- piece[1,1]
+  if(stringr::str_detect(krn_key,"\\:")){
+    krn_key <- gsub("\\*","",krn_key); krn_key <- gsub("\\:","",krn_key)
+    # If the key is uppercase; it is a major key. Otherwise, minor.
+    if(krn_key == toupper(krn_key)){ return(c(krn_key,"Major")) } else { return(c(krn_key,"minor")) }
+  } 
+  # If the key signature is a plain signature, use note frequencies
+  else{
+    # Get the major and relative minor keys
+    major_key <- krn_key
+    minor_key <- KRN_KEYS$relative_minor[which(KRN_KEYS$key == major_key)]
+    # Select the note columns
+    note_df <-  piece %>% select(contains("note"))
+    # For both keys, get the tonic and fifth (degree 1 and 5)
+    RELKEYS <- c(major_key, minor_key)
+    tonics <- .getScaleDegreez(degree = 1, scale = RELKEYS)
+    fifths <- .getScaleDegreez(degree = 5, scale = RELKEYS)
+    # Count the frequency of the tonic shells 
+    tonics_fifths_count <- rep(0,2)
+    names(tonics_fifths_count) <- tonics
+    # Iterate over each note column
+    for(i in 1:ncol(note_df)){
+      # Get the note frequency in the column
+      curr_col <- table(note_df[,i])
+      # Get the frequency of each key shell (root and fifth)
+      mmtonic <- curr_col[tonics] %>% as.vector
+      mmtonic[is.na(mmtonic)]<- 0
+      mmfifth <- curr_col[fifths] %>% as.vector
+      mmfifth[is.na(mmfifth)]<- 0
+      tonics_fifths_count <- tonics_fifths_count + mmtonic + mmfifth
+    }
+    # Get the "votes" for each relative key
+    Major <- tonics_fifths_count[1] %>% unname; minor <- tonics_fifths_count[2] %>% unname
+    # Return the key with the more votes
+    if(Major >= minor){ 
+      return(c(tonics[1],"Major"))
+    } 
+    else { 
+      return(c(tonics[2],"minor"))
+    }
+  }
+}
+
+.getScaleDegreez <- function(degree, scale){
+  KRN_SCALES[degree,scale] %>% unlist() %>% unname() %>% as.character()
+}
+
+#========================================================#
+#               RELATIVE KEY (DEPRECATED)
+#========================================================#
+#' Figure out the relative key of a piece (previously called Major_minor)
+#' 
+#' @param piece A piece of .krn music
+#' @import tidyverse
+#' 
+relative_key_DEP <- function(piece){
   krn_key <- piece[1,1]
   if(stringr::str_detect(krn_key,"\\:")){
     krn_key <- gsub("\\*","",krn_key)
     krn_key <- gsub("\\:","",krn_key)
-    if(krn_key == toupper(krn_key)){ c(krn_key,"Major") }
-    else(c(krn_key,"minor"))
-  } else{
+    if(krn_key == toupper(krn_key)){ c(krn_key,"Major") } else(c(krn_key,"minor"))
+  } 
+  else{
     krn_key <- gsub("\t.*","",krn_key)
     key_s <- gsub("\\*k","",krn_key)
     key_s <- gsub("\\[","",key_s)
@@ -231,8 +288,7 @@ relative_key <- function(piece){
     names(tonics_fifths_count) <- tonics
     Major <- tonics_fifths_count[1] %>% unname
     minor <- tonics_fifths_count[2] %>% unname
-    if(Major >= minor){x <- c(tonics[1],"Major")
-    }else{x <- c(tonics[2],"minor")}
+    if(Major >= minor){x <- c(tonics[1],"Major")} else {x <- c(tonics[2],"minor")}
     x
   }
 }

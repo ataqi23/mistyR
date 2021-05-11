@@ -16,6 +16,8 @@ scaleDegree <- function(tonic, note){
   # Get tonic incidental
   tonic_incidental <- .detectIncidental(tonic)
   tonic_letter <- .dropIncidental(tonic)
+  # If the note is itself, return tonic scale degree
+  if(tonic == note){ return("1") }
   # If the tonic is a white key, then just call that function
   if(tonic_incidental == "natural") { return(.scaleDegreeWK(tonic, note)) }
   # Try to find a white enharmonic first

@@ -4,7 +4,7 @@ require(tidyverse)
 #require(patchwork)
 
 # Imports all source code for a variable depth of directory.
-.src <- function(depth = 1, r_folder = "../R/"){
+.src <- function(depth = 1, r_folder = "../R-museR/"){
   # Get directory path based on directory depth for use in directories with given variable depth
   dir_path <- paste(c(rep("../",depth-1),r_folder), sep = "", collapse = "")
   # Get script file names and get their path

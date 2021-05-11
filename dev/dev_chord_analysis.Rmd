@@ -1,0 +1,47 @@
+---
+title: "Dev Template"
+author: "Taqi"
+#date: "5/8/2021"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+# Load dependencies
+library(music)
+# Source files
+source("../R/header.R")
+.src(d = 1)
+```
+
+```{r}
+CHORD_DEGREES <- list(major = c("3", "5"),
+                       minor = c("b3", "5"),
+                       sus2 = c("2", "5"),
+                       sus4 = c("4", "5"),
+                       `7th` = c("3", "5", "b7"),
+                       major7th = c("3", "5", "7"),
+                       minor7th = c("b3", "5", "b7"),
+                       `6th` = c("3", "5", "6"),
+                       minor6th = c("b3", "5", "6"),
+                       diminished = c("b3", "b5"),
+                       diminished7th = c("b3", "b5", "%7"),
+                       halfDiminished7th = c("b3", "b5", "b7"),
+                       augmented = c("3", "#5"),
+                       `7th#5` = c("3", "#5", "b7"),
+                       `5th` = c("5"),
+                      flat5th = c("3","b5"))
+# Add extended chords
+CHORD_DEGREES$`9th` <- c(CHORD_DEGREES$`7th`, "2")
+CHORD_DEGREES$`7th#9` <- c(CHORD_DEGREES$`7th`, "#2")
+CHORD_DEGREES$major9th <- c(CHORD_DEGREES$major7th, "2")
+CHORD_DEGREES$add9 <- c(CHORD_DEGREES$major, "2")
+CHORD_DEGREES$minor9th <- c(CHORD_DEGREES$minor7th, "2")
+CHORD_DEGREES$minorAdd9th <- c(CHORD_DEGREES$minor, "2")
+```
+
+
+```{r}
+CHORD_DEGREES$`7th` <- c(CHORD_DEGREES$major, "b7")
+```
+

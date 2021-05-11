@@ -41,10 +41,28 @@ RHYTHMS <- c("2","2.","4","4.","8","8.","16","16.","32")
   notes <- as.factor(c("A","A-","A#","B","B-","B#","C","C-","C#",
                        "D","D-","D#","E","E-","E#","F","F-","F#",
                        "G","G-","G#","rest"))
+  key <- (data.frame(key_sig = key_sigs, key = major_keys, relative_minor = minor_keys))
+  #colnames(key) <- key_sigs
+  # Return key table
+  return(key)
+}
+#==============================================================
+.KEYS_TABLE_OLD <- function(){    
+  key_sigs <- c("nosf","f#","f#c#","f#c#g#","f#c#g#d#","f#c#g#d#a#",
+                "f#c#g#d#a#e#","f#c#g#d#a#e#b#",
+                "b-e-a-d-g-c-f-","b-e-a-d-g-c-","b-e-a-d-g-",
+                "b-e-a-d-","b-e-a-","b-e-","b-")
+  major_keys <- c("C","G","D","A","E","B","F#","C#",
+                  "C-","G-","D-","A-","E-","B-","F")
+  minor_keys <- c("a","e","b","f#","c#","g#","d#","a#","a-",
+                  "e-","b-","f","c","g","d")
+  notes <- as.factor(c("A","A-","A#","B","B-","B#","C","C-","C#",
+                       "D","D-","D#","E","E-","E#","F","F-","F#",
+                       "G","G-","G#","rest"))
   key <- t(data.frame(major_keys,minor_keys))
   colnames(key) <- key_sigs
   # Return key table
-  return(key_sigs)
+  return(key)
 }
 #==============================================================
 #                         SCALES
