@@ -18,7 +18,7 @@ ALPH_HASH <- function(){
   # Create ordered vectors for all the incidentals covered
   INCS <- c("flat","sharp","2flat","2sharp")
   # Create ordered vectors for the incidental symbols and their name
-  SYMBOLS <- c("-","b","#","&","x","X") # Note: removed ## and bb due to regex confounding. Fix: match exact number.
+  SYMBOLS <- c("b","-","#","&","x","X") # Note: removed ## and bb due to regex confounding. Fix: match exact number.
   # Create a vector of counts for each incidental for robust maintainence
   COUNTS <- c(2,1,1,2)
   # Using the counts, create the correct ordered incidentals vector

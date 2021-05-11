@@ -48,32 +48,6 @@ scale <- function(tonic, scale_degrees){
 }
 
 #============================================#
-#              SCALE ORDERING
-#============================================#
-
-# Given an unordered scale, makes it a proper scale (for circle of fifths)
-.orderScale <- function(tonic, scale){
-  # Get parameters
-  num_notes <- length(scale)
-  # Make a sample tonic-ordered scale
-  tonic_scale <- MUS_ALPH[.ALPH_RANGE(note_index(tonic), 7)]
-  # Create a stripped version of the scale
-  stripped <- c()
-  for(i in 1:num_notes){
-    stripped[i] <- .dropIncidental(scale[i])
-  }
-  
-}
-#============================================#
-# Ensure the scale degrees are enharmonically correct by finding the enharmonic of the first repeated letter
-# .scaleEnharmonics <- function(scale){
-#   for(i in 1:num_notes){
-#     if()
-#   }  
-# }  
-
-
-#============================================#
 #              SCALE ARITHMETIC
 #============================================#
 
@@ -98,4 +72,29 @@ scale <- function(tonic, scale_degrees){
   note
 }
 
+
+#============================================#
+#              SCALE ORDERING
+#============================================#
+
+# Given an unordered scale, makes it a proper scale (for circle of fifths)
+.orderScale <- function(tonic, scale){
+  # Get parameters
+  num_notes <- length(scale)
+  # Make a sample tonic-ordered scale
+  tonic_scale <- MUS_ALPH[.ALPH_RANGE(note_index(tonic), 7)]
+  # Create a stripped version of the scale
+  stripped <- c()
+  for(i in 1:num_notes){
+    stripped[i] <- .dropIncidental(scale[i])
+  }
+  
+}
+#============================================#
+# Ensure the scale degrees are enharmonically correct by finding the enharmonic of the first repeated letter
+# .scaleEnharmonics <- function(scale){
+#   for(i in 1:num_notes){
+#     if()
+#   }  
+# }  
 
