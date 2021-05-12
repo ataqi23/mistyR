@@ -1,12 +1,4 @@
 
-
-#============================================#
-#               SCALE DEGREE
-#============================================#
-
-
-
-
 #============================================#
 #               SCALE DEGREE
 #============================================#
@@ -88,6 +80,8 @@ scaleDegree <- function(tonic, note){
 .improperStepDegree <- function(tonic, note){
   # Get the number of semitones between the tonic and altered tonic
   semitones <- .semitoneDifference(tonic, note)
+  #print(semitones)
+  if(length(semitones) == 0){ return(NA) } # Quell numeric(0) bug
   # Depending on number of semitones, return the scale degree
   if(abs(semitones) == 1){ # (Half Step)
     # Based on whether the note is below or above the tonic, return the appopriate degree

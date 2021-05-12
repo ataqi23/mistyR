@@ -17,11 +17,11 @@ diatonic_scale <- function(tonic, mode){
 }
 #============================================#
 # Given a tonic, returns the major blues scale
-blues_scale <- function(tonic, quality){ 
-  if(quality == "minor"){ 
-    scale(tonic, OTHER_SCALES$minor_blues) 
+blues_scale <- function(tonic, quality){
+  if(quality == "minor"){
+    scale(tonic, OTHER_SCALES$minor_blues)
   }
-  else if(quality == "major"){ 
+  else if(quality == "major"){
     scale(tonic, OTHER_SCALES$major_blues)
   }
 }
@@ -51,27 +51,25 @@ scale <- function(tonic, scale_degrees){
 #              SCALE ORDERING
 #============================================#
 
-# Given an unordered scale, makes it a proper scale (for circle of fifths)
-.orderScale <- function(tonic, scale){
-  # Get parameters
-  num_notes <- length(scale)
-  # Make a sample tonic-ordered scale
-  tonic_scale <- MUS_ALPH[.ALPH_RANGE(note_index(tonic), 7)]
-  # Create a stripped version of the scale
-  stripped <- c()
-  for(i in 1:num_notes){
-    stripped[i] <- .dropIncidental(scale[i])
-  }
-  
-}
+# # Given an unordered scale, makes it a proper scale (for circle of fifths)
+# .orderScale <- function(tonic, scale){
+#   # Get parameters
+#   num_notes <- length(scale)
+#   # Make a sample tonic-ordered scale
+#   tonic_scale <- MUS_ALPH[.ALPH_RANGE(note_index(tonic), 7)]
+#   # Create a stripped version of the scale
+#   stripped <- c()
+#   for(i in 1:num_notes){
+#     stripped[i] <- .dropIncidental(scale[i])
+#   }
+# }
 #============================================#
 # Ensure the scale degrees are enharmonically correct by finding the enharmonic of the first repeated letter
 # .scaleEnharmonics <- function(scale){
 #   for(i in 1:num_notes){
 #     if()
-#   }  
-# }  
-
+#   }
+# }
 
 #============================================#
 #              SCALE ARITHMETIC
@@ -97,5 +95,3 @@ scale <- function(tonic, scale_degrees){
   for(i in 1:steps){ note <- MUS_ALPH %STEPDOWN% note }
   note
 }
-
-

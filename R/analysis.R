@@ -8,13 +8,16 @@ analyzeKRN <- function(filename){ analyzeScore(kern2df(filename)) }
 
 #============================================#
 # After splitting the score into subscores (accounting for key changes), analyze each subscore and obtain score summary 
-analyzeScore <- function(score){
+analyzeScore <- function(score, bars = F){
   # Filter for notes
   score <- getScoreNotes(score)
   # Split into subscores (accounting for key changes)
   subscores <- score %>% split(score$key_p)
   # Get the modality of each subscore
-  modal <- map_dfr(subscores, subscoreModality) %>% select(!contains("bar"))
+  modal <- map_dfr(subscores, subscoreModality)
+  if(bars){ return(modal) }
+  # Remove bars
+  modal <- modal %>% select(!contains("bar"))
   # Return the summary statistics
   purrr::map_dbl(modal, mean)
 }
@@ -38,14 +41,14 @@ subscoreModality <- function(subscore){
     # Obtain the notes and their sd freq
     measure_notes <- collapseNotes(measure)
     freqs <- SD_freq(measure_notes, tonic)
-    modal[i,2:4] <- modality(freqs, quality)
+    modal[i,2:6] <- modality(freqs, quality)
   }
   return(modal)
 }
 #============================================#
 # Helper function for subscoreModality
 .modalRow <- function(){
-  data.frame(blues = NA, interchange = NA, borrowed_sub = NA)
+  data.frame(blues = NA, interchange = NA, borrowed_sub = NA, dissonance = NA, consonance = NA)
 }
 
 #============================================#
@@ -69,11 +72,15 @@ modality <- function(freqs, quality = NA){
   # Create a data frame of features
   modality <- data.frame(blues = 0)
   # Blues
-  modality$blues <- .countFreqs(c("3","#4","b5"), freqs)
+  modality$blues <- .countFreqs(c("3","#4","-5"), freqs)
   # Interchange
-  modality$interchange <- .countFreqs(c("b2","6"), freqs)
+  modality$interchange <- .countFreqs(c("-2","3","6","7"), freqs)
   # Borrowed subdominant 
   modality$borrowed_sub <- .countFreqs(c("6"), freqs)
+  # Consonance
+  modality$consonance <- .countFreqs(c("1","-3","5","-6"), freqs)
+  # Dissonance
+  modality$dissonance <- .countFreqs(c("-2","#2","#4","-5","-7","7"), freqs)
   # Return the features
   modality/total
 }
@@ -84,11 +91,15 @@ modality <- function(freqs, quality = NA){
   # Create a data frame of features
   modality <- data.frame(blues = 0)
   # Blues
-  modality$blues <- .countFreqs(c("b3","#4","b5","b6"), freqs)
+  modality$blues <- .countFreqs(c("-3","#4","-5","-6"), freqs)
   # Interchange
-  modality$interchange <- .countFreqs(c("#4","b6","b7"),freqs)
+  modality$interchange <- .countFreqs(c("-3","#4","-6","-7"),freqs)
   # Borrowed subdominant 
-  modality$borrowed_sub <- .countFreqs(c("b6"), freqs)
+  modality$borrowed_sub <- .countFreqs(c("-6","#5"), freqs)
+  # Consonance
+  modality$consonance <- .countFreqs(c("1","3","5","6"), freqs)
+  # Dissonance
+  modality$dissonance <- .countFreqs(c("-2","#2","#4","-5","-7","7"), freqs)
   # Return the features
   modality/total
 }
@@ -120,7 +131,8 @@ getMeasures <- function(measure, score){
 collapseNotes <- function(score){
   score_notes <- score %>% select(!contains(c("key","measure_p")))
   score_notes <- map(score_notes, .cleanNoteColumn) %>% unlist() %>% unname()
-  score_notes[which(!is.na(score_notes))]
+  score_notes <- score_notes[which(!is.na(score_notes))]
+  score_notes <- score_notes[which(score_notes %in% POSSIBLE_NOTES)]
 }
 #*******************************************#
 # Helper function: .obtainNotes()
