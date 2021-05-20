@@ -20,3 +20,8 @@ Currently, there are implementations for the following features:
 - Modal feature analysis (of scale degree frequencies)
 - Rhythmic entropy
 - Rhythmic subdivision frequencies
+
+## Citations
+
+Emily Palmer's museR package could be found in the link below.
+https://github.com/empalmer/museR
