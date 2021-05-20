@@ -23,5 +23,4 @@ Currently, there are implementations for the following features:
 
 ## Citations
 
-Emily Palmer's museR package could be found in the link below.
-https://github.com/empalmer/museR
+Emily Palmer's museR package could be found in the link here: https://github.com/empalmer/museR
