@@ -12,6 +12,25 @@ scaleDegree <- function(tonic, note){
   if(tonic == note){ return("1") }
   # If the tonic is a white key, then just call that function
   if(tonic_incidental == "natural") { return(.scaleDegreeWK(tonic, note)) }
+  # Otherwise, flatten sharp keys and sharpen flat keys
+  else if(tonic_incidental == "flat" && (tonic_letter %in% HAS_FLATS)){
+    tonic <- tonic %INC% "#"; note <- note %INC% "#"
+    return(.scaleDegreeWK(tonic, note)) 
+  }
+  else if(tonic_incidental == "sharp"){
+    tonic <- tonic %INC% "b"; note <- note %INC% "b"
+    return(.scaleDegreeWK(tonic, note)) 
+  }
+  # Handle complex case in seperate function
+  else{ .complexCase(tonic, note) }
+}
+
+# Handle the more complex cases, enharmonics
+.complexCase <- function(tonic, note){
+  # Get tonic incidental
+  tonic_incidental <- .detectIncidental(tonic)
+  tonic_letter <- .dropIncidental(tonic)
+  
   # Try to find a white enharmonic first
   if(tonic_incidental == "flat" && !(tonic_letter %in% HAS_FLATS)){
     # Get the white key enharmonic
@@ -25,6 +44,7 @@ scaleDegree <- function(tonic, note){
     # Find the scale degree using the white key enharmonic
     return(.scaleDegreeWK(tonic, note))
   }
+  
   # Repeat for the sharp white enharmonics
   if(tonic_incidental == "sharp" && !(tonic_letter %in% HAS_SHARPS)){
     # Get the white key enharmonic
@@ -37,15 +57,7 @@ scaleDegree <- function(tonic, note){
     }
     return(.scaleDegreeWK(tonic, note))
   }
-  # Otherwise, flatten sharp keys and sharpen flat keys
-  else if(tonic_incidental == "flat"){
-    tonic <- tonic %INC% "#"; note <- note %INC% "#"
-    return(.scaleDegreeWK(tonic, note)) 
-  }
-  else if(tonic_incidental == "sharp"){
-    tonic <- tonic %INC% "b"; note <- note %INC% "b"
-    return(.scaleDegreeWK(tonic, note)) 
-  }
+  # Catch all other cases: possible misuse
   NA
 }
 #=======================================================#
@@ -54,8 +66,7 @@ scaleDegree <- function(tonic, note){
   # Get a base scale of the tonic (to obtain letters for each degree)
   base_scale <- .baseScale(tonic)
   # Get the note letter and note incidental
-  note_letter <- .dropIncidental(note)
-  note_inc <- .detectIncidental(note)
+  note_letter <- .dropIncidental(note); note_inc <- .detectIncidental(note)
   # Handle improperly written steps; otherwise, the note letter is certainly not the same as the tonic
   if(note_letter == tonic){ return(.improperStepDegree(tonic, note)) }
   # Using the note letter only, get the (unaltered) scale degree and the # of semitones

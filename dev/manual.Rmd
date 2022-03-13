@@ -1,0 +1,161 @@
+---
+title: "MistyR: Solving Music Theory 1"
+author: "Taqi"
+#date: "5/8/2021"
+output: 
+  pdf_document:
+    includes: 
+      in_header: ["tex/preamble.tex", "tex/music.tex"]
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+# Load dependencies
+library(music)
+# Source files
+source("../R/header.R")
+.src(d = 1)
+```
+
+## MistyR Package
+
+Written for MATH241. Needed to count frequencies of scale degrees to find summary statistics mutated from these frequencies, which we called "tonal features". The summary statistics were computted then faceted by composer/genre, from which we gain inferential insight. Here are the features we came up with:
+$$Consonance: \{\sd{3}, \sd{5}, \sd{6}\}$$
+$$Dissonance: \{\sd{2}, \sd{7}\}$$ 
+
+# Introduction
+
+## Notes: Letters and Incidentals
+
+In Music Theory I, we are taught how to write down chords in any key we are asked to. We are able to do this because behind every chord, there are intervals that build it up. As such, to solve music theory computationally, we need to boil down the task to its most basic components and reduce it to a string manipulation puzzle. 
+
+We will dive right into it. First, we need to know what keys have \textbf{black key sharps} and \textbf{black key flats}. Look at the piano below.
+
+
+\begin{figure}[thpb]\
+  \centering
+  \keyboard
+  \caption{The Chromatic Scale}
+  \label{Chord1}
+\end{figure}
+
+Now, the piano is not labelled, but assuming that you've memorized the 7 note names of the C Major scale on the piano, you should be able to answer this easily. But a little review cannot hurt. The 7 keys of the piano are each labelled by a letter. We will call these letters \textbf{the musical alphabet} which is essentially the first 7 letters of the Latin alphabet wrapping back (hinting at the octave). 
+
+```{r}
+MUS_ALPH
+```
+
+
+
+This is peeking way in the future, but any 7-note scale (defined as set of notes that partition the octave with respect to some root/tonic) will probably be easy expressible with \textit{ordered pairs} consisting of \textbf{all the letters of the musical alphabet} and \textbf{an incidental}. For example, the note $B^\flat$ can be resolved as the ordered pair $(B, \flat)$. If there is no incidental, it is understood as a natural $(\natural)$. So, $C = (C, \natural)$
+
+\newpage
+
+Now, once you know the 7 notes, you look at its neighbouring notes and record which notes have black key flats/sharps. do so, you then make a dataframe for those two sets of notes. Note that any note has a "flat" or a "sharp", by "having a flat/sharp", we really mean "having a black key flat/sharp".^[Otherwise, white key flats/sharps are known as \textbf{enharmonics} or enharmonic spellings of the note. This is critical to note because remember, we are trying to reduce the scale degree question to a matter of string manipulation; enharmonics cause some trouble so it is important to keep them in mind. That being said, the context in which enharmonics usually arise is when the key is "very far from C". Some spelling enharmonics are thus less common because if available, the simplest spelling will be used and double-sharps/flats are avoided when possible].
+
+```{r}
+HAS_FLATS
+HAS_SHARPS
+```
+
+Gathering all that information in a nice "musical alphabet" hash table which we call `ALPHABET`:
+
+```{r}
+ALPHABET
+```
+
+
+That being said, let's now consider the study of intervals.
+
+## Intervals
+
+That being said, now we can easily construct intervals a given number of semitones above a given note just by using the hash table above! This is easy for \textit{white notes} at least, which is what we will solve first. The answer is also visual, if we choose two white keys, we just count how many musical letters or "steps" we take chromatically; we take the number of white notes (just the number of letters in the alphabet, by construction) and the black keys in between. When we do so, we obtain a function like this: 
+
+```{r}
+# Find the white-key range number of semitones between a note and a given scale degree
+.WKsemitones <- function(note, degree){
+  # Get the alphabet range for the chosen note and degree
+  note_idx <- note_index(note)
+  range <- .ALPH_RANGE(note_idx, degree)
+  letter_range <- ALPHABET[range,]
+  # Get the number of flats in range
+  FLATS <- sum(letter_range[2:degree,]$HAS_FL)
+  # Get the number of white keys in the range (exclude tonic)
+  WHITES <- degree - 1
+  # Return the number of semitones
+  semitones <- FLATS + WHITES
+  semitones
+}
+```
+
+Its usage, and some helper functions:
+
+```{r}
+# Convert a note into a note index in the musical alphabet
+note_index <- function(note){ which(MUS_ALPH == note) }
+
+# Generates a wrapped range of indices on the musical alphabet of a given a length
+.ALPH_RANGE <- function(i, length){
+  range <- i:(i + (length - 1))
+  range <- mod7(range - 1)
+  range + 1
+}
+```
+
+We compute the number of semitones between $A$ and $F$:
+
+```{r}
+.WKsemitones("A", 6)
+```
+We compute the number of semitones between $C$ and $B$:
+
+```{r}
+.WKsemitones("C", 7)
+```
+Now here is the clever part, since we obtained the results for the white keys, we can also use them for the black keys if we are clever to reduce the problem to a white key problem. To be concrete, say we want the note which is 5th scale degree of $F^\sharp$, to do so, we obtain the 5th scale degree for $F$, then sharpen it! 
+
+Furthermore, we cleverly exploit the encoded incidental information in the quality of our interval. For instance, if we want the $\flat \sd{3}$, or the minor third, we simply flatten $\sd{3}$. Below is our interval construction function:
+
+```{r}
+.intervalNote <- function(tonic, degree){
+  # Coerce the degree as a numeric 
+  degree_n <- parse_number(degree)
+  # Get the number of semitones from the scale degree
+  semitones <- SCALE_DEGREES[[degree]]
+  # Get the target note letter (by stepping up n - 1 times)
+  white <- tonic %STEP+% (degree_n - 1)
+  # Find the semitones spanned
+  semitones_white <- .WKsemitones(tonic, degree_n)
+  # Use incidentals to find the difference
+  incidental <- .incidentalSemitones(semitones - semitones_white)
+  # Paste incidental the correct target note
+  note <- paste(white, incidental, sep = "")
+  # Return the interval
+  note
+}
+```
+
+With the helper function:
+
+```{r}
+# Return either the number of semitones of a incidental or incidental from semitones
+.incidentalSemitones <- function(x, inverse = T){
+  INCIDENTAL <- c("&", "-", "", "#", "x")
+  VALUE <- c(-2,-1,0,1,2)
+  if(inverse) { return(INCIDENTAL[which(VALUE == x)]) }
+  VALUE[which(INCIDENTAL == x)]
+}
+```
+
+And the scale degree dataframe:
+
+```{r}
+SCALE_DEGREES
+```
+
+Resulting in the functionality:
+
+```{r}
+.intervalNote("C", "5")
+```
+
